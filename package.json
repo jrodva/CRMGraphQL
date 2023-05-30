@@ -15,9 +15,16 @@
     "graphql"
   ],
   "author": "Jonathan Rodríguez Vaca",
- "license": "(MIT OR Apache-2.0)",
+  "license": "(MIT OR Apache-2.0)",
   "bugs": {
     "url": "https://github.com/jrodva/CRMGraphQL/issues"
   },
-  "homepage": "https://github.com/jrodva/CRMGraphQL#readme"
+  "homepage": "https://github.com/jrodva/CRMGraphQL#readme",
+  "devDependencies": {
+    "nodemon": "^2.0.22"
+  },
+  "dependencies": {
+    "apollo-server": "^3.12.0",
+    "graphql": "^16.6.0"
+  }
 }
