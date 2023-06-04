@@ -1,4 +1,5 @@
 const User = require("./schema")
+const bcryptjs = require("bcryptjs");
 
 const resolvers = {
   Query: {
@@ -12,6 +13,9 @@ const resolvers = {
       if (isAnExistingUser) {
         throw new Error("Existing user");
       }
+
+      const salt = bcryptjs.getSalt(10);
+      input.password = await bcryptjs.hash(password, salt);
 
       try {
         const user = new User(input);
