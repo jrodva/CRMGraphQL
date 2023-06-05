@@ -1,4 +1,6 @@
-const User = require("./schema")
+require('dotenv').config({ path: '.env.local'});
+
+const User = require("../models/User");
 const bcryptjs = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 
@@ -26,7 +28,7 @@ const resolvers = {
         throw new Error("Existing user");
       }
 
-      const salt = bcryptjs.getSalt(10);
+      const salt = bcryptjs.getSalt(process.env.HASH);
       input.password = await bcryptjs.hash(password, salt);
 
       try {
@@ -43,6 +45,9 @@ const resolvers = {
     },
     authenticateUser: async (_, { input }) => {
       const { email, password } = input;
+      console.log(`INPUT ${email} :: ${password}`);
+      console.log(User);
+
       const user = await User.findOne({email});
 
       if (!user) {
