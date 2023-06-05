@@ -11,7 +11,11 @@ const getToken = (user, expiresIn) => {
 
 const resolvers = {
   Query: {
-    getCourse: () => "Something"
+    getUser: async  (_, { token }) => {
+      const userId = await jwt.verify(token, process.env.SECRET);
+
+      return userId;
+    }
   },
   Mutation: {
     newUser: async (_, { input }) => {
