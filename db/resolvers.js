@@ -18,6 +18,24 @@ const resolvers = {
       const userId = await jwt.verify(token, process.env.SECRET);
 
       return userId;
+    },
+    getProduct: async (_, { id }) => {
+      const product = await Product.findById(id);
+
+      if (!product) {
+        throw new Error("Product not found");
+      }
+
+      return product;
+    },
+    getProducts: async (_) => {
+      try {
+        const products = await Product.find({});
+
+        return products;
+      } catch (error) {
+        console.log(error);
+      }
     }
   },
   Mutation: {
@@ -34,10 +52,9 @@ const resolvers = {
 
       try {
         const user = new User(input);
+        const result = await user.save();
 
-        user.save();
-
-        return user;
+        return result;
       } catch (error) {
         console.log(error);
       }
@@ -63,7 +80,20 @@ const resolvers = {
       return {
         token: getToken(user, '24h')
       }
-    }
+    },
+    newProduct: async (_, { input }) => {
+      try {
+        const product = new Product(input);
+        const result = await product.save();
+
+        return result;
+      } catch (error) {
+        console.log(error);
+      }
+
+      console.log(`Creating new product ${input.name}`);
+    },
+
   }
 };
 
