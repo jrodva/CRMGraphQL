@@ -41,9 +41,9 @@ const resolvers = {
   Mutation: {
     newUser: async (_, { input }) => {
       const { email, password } = input;
-      const existingUser = await User.findOne({email});
+      const user = await User.findOne({email});
 
-      if (existingUser) {
+      if (user) {
         throw new Error("Existing user");
       }
 
@@ -93,7 +93,28 @@ const resolvers = {
 
       console.log(`Creating new product ${input.name}`);
     },
+    updateProduct: async (_, { id, input }) => {
+      const { name, stock, price } = input;
+      let product = await Product.findById(id);
 
+      if (!product) {
+        throw new Error("This product does not exist")
+      }
+      product = await Product.findOneAndUpdate({ _id: id }, input, { new: true});
+
+      return product;
+    },
+    deleteProduct: async (_, { id }) => {
+      let product = await Product.findById(id);
+
+      if (!product) {
+        throw new Error("This product does not exist")
+      }
+
+      await Product.findByIdAndDelete({_id: id});
+
+      return "Deleted product"
+    }
   }
 };
 
