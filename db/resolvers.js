@@ -58,6 +58,19 @@ const resolvers = {
       } catch (error) {
         console.log("Fail requesting clients : ", error);
       }
+    },
+    getCustomer: async (_, { id }, ctx ) => {
+      const customer = await Customer.findById(id);
+
+      if (!customer) {
+        throw new Error("Customer not found");
+      }
+
+      if (customer.vendor.toString() !== ctx.user.id) {
+        throw new Error("Not authorized customer to get customer");
+      }
+
+      return customer;
     }
   },
   Mutation: {
