@@ -2,6 +2,7 @@ require('dotenv').config({ path: '.env.local'});
 
 const User = require("../models/User");
 const Product = require("../models/Product");
+const Customer = require("../models/Customer");
 const bcryptjs = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 
@@ -35,6 +36,27 @@ const resolvers = {
         return products;
       } catch (error) {
         console.log(error);
+      }
+    },
+    getCustomers: async () => {
+      try {
+        const customers = await Customer.find({});
+
+        return customers;
+      } catch (error) {
+        console.log("Fail requesting clients : ", error);
+      }
+    },
+    getCustomersVendor: async (_, {}, ctx) => {
+      const { user: { id } }  = ctx;
+      const vendor = id.toString();
+
+      try {
+        const customers = await Customer.find({ vendor });
+
+        return customers;
+      } catch (error) {
+        console.log("Fail requesting clients : ", error);
       }
     }
   },
@@ -114,6 +136,25 @@ const resolvers = {
       await Product.findByIdAndDelete({_id: id});
 
       return "Deleted product"
+    },
+    newCustomer: async (_, { input }, ctx) => {
+      const { email } = input;
+      const customer = await Customer.findOne({ email });
+
+      if (customer) {
+        throw new Error("Existing customer");
+      }
+
+      const newCustomer = new Customer(input);
+      newCustomer.vendor = ctx.user.id;
+
+      try {
+        const result = await newCustomer.save();
+
+        return result;
+      } catch (error) {
+        console.log("Error creating new customer : ", error);
+      }
     }
   }
 };
