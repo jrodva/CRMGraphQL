@@ -47,7 +47,7 @@ const resolvers = {
         console.log("Fail requesting clients : ", error);
       }
     },
-    getCustomersVendor: async (_, {}, ctx) => {
+    getCustomersByVendor: async (_, {}, ctx) => {
       const { user: { id } }  = ctx;
       const vendor = id.toString();
 
