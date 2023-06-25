@@ -24,11 +24,13 @@ const server = new ApolloServer({
   }
 });
 
-try {
-  await connectDataBase();
-  const { url } = await server.listen()
+(async() => {
+  try {
+    await connectDataBase();
+    const { url } = await server.listen()
 
-  console.log(`Server ready at url ${url}`)
-} catch (error) {
-  console.log(`Failed connection for ${error}`);
-}
+    console.log(`Server ready at url ${url}`)
+  } catch (error) {
+    console.log(`Failed connection for ${error}`);
+  }
+})();
