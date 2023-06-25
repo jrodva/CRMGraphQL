@@ -4,7 +4,6 @@
   "description": "A CRM based on GraphQL",
   "main": "index.js",
   "scripts": {
-    "preinstall": "nvm use",
     "dev": "nodemon index.js",
     "start": "node index.js",
     "test": "echo \"Error: no test specified\" && exit 1"
