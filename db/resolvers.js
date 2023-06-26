@@ -72,6 +72,15 @@ const resolvers = {
       }
 
       return customer;
+    },
+    getOrders: async () => {
+      try {
+        const orders = await Order.find({});
+
+        return orders;
+      } catch (error) {
+        console.log("Fail requesting orders : ", error);
+      }
     }
   },
   Mutation: {
