@@ -81,6 +81,15 @@ const resolvers = {
       } catch (error) {
         console.log("Fail requesting orders : ", error);
       }
+    },
+    getOrdersByVendor: async (_, {}, ctx) => {
+      try {
+        const orders = await Order.find({ vendor: ctx.user.id });
+
+        return orders;
+      } catch (error) {
+        console.log("Fail requesting orders by vendor : ", error);
+      }
     }
   },
   Mutation: {

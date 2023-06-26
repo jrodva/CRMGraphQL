@@ -110,6 +110,7 @@ const typeDefs = gql`
     deleteCustomer(id: ID!): String
     newOrder(input: OrderInput): Order
     getOrders: [Order]
+    getOrdersByVendor: [Order]
   }
 `;
 
