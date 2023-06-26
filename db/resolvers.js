@@ -297,6 +297,21 @@ const resolvers = {
       const updatedOrder = await Order.findOneAndUpdate({ _id: id }, input, { new: true});
 
       return updatedOrder;
+    },
+    deleteOrder: async (_, { id }, ctx) => {
+      const orders = await Order.findById({ id });
+
+      if (!orders) {
+        throw new Error("Order not found");
+      }
+
+      if (order.vendor.toString() !== ctx.user.id) {
+        throw new Error("Not authorized customer to update order");
+      }
+
+      await Order.findByIdAndDelete({_id: id});
+
+      return "Deleted order";
     }
   }
 };
