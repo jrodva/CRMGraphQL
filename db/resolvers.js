@@ -266,6 +266,37 @@ const resolvers = {
       } catch (error) {
         console.log("Error creating new order : ", error);
       }
+    },
+    updateOrder: async (_, { id, input }, ctx) => {
+      const { customer } = input;
+      const orders = await Order.findById({ id });
+
+      if (!orders) {
+        throw new Error("Order not found");
+      }
+
+      if (orders.vendor.toString() !== ctx.user.id) {
+        throw new Error("Not authorized customer to update order");
+      }
+
+      // Check stock
+      if (input.order) {
+        for await (const article of input.order) {
+          const { id } = article;
+          const product = await Product.findById(id);
+
+          if (article.quantity > product.stock) {
+            throw new Error(`The product ${product.name} exceeds the available quantity`);
+          } else {
+            product.stock = product.stock - article.quantity;
+            await product.save();
+          }
+        }
+      }
+
+      const updatedOrder = await Order.findOneAndUpdate({ _id: id }, input, { new: true});
+
+      return updatedOrder;
     }
   }
 };
