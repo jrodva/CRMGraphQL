@@ -31,6 +31,21 @@ const typeDefs = gql`
     vendor: String
   }
 
+  type Order {
+    id: ID
+    order: [OrderGroup]
+    total: Float
+    customer: Customer
+    vendor: ID
+    state: OrderState
+    createdAt: String
+  }
+
+  type OrderGroup {
+    id: ID
+    quantity: Int
+  }
+
   input AuthenticateInput {
     email: String!
     password: String!
@@ -57,6 +72,24 @@ const typeDefs = gql`
     price: Float!
   }
 
+  input OrderProductInput {
+    id: ID
+    quantity: Int
+  }
+
+  input OrderInput {
+    order: [OrderProductInput]
+    total: Float!
+    customer: ID!
+    state: OrderState
+  }
+
+  enum OrderState {
+    PENDING,
+    COMPLETED,
+    CANCELED
+  }
+
   type Query {
     getUser(token: String!): User
     getProduct(id: ID!): Product
@@ -75,6 +108,7 @@ const typeDefs = gql`
     newCustomer(input: CustomerInput): Customer
     updateCustomer(id: ID!, input: CustomerInput): Customer
     deleteCustomer(id: ID!): String
+    newOrder(input: OrderInput): Order
   }
 `;
 
