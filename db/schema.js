@@ -111,6 +111,7 @@ const typeDefs = gql`
     newOrder(input: OrderInput): Order
     getOrders: [Order]
     getOrdersByVendor: [Order]
+    getOrder(id: ID!): Order
   }
 `;
 

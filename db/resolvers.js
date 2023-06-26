@@ -90,6 +90,19 @@ const resolvers = {
       } catch (error) {
         console.log("Fail requesting orders by vendor : ", error);
       }
+    },
+    getOrder: async (_, { id }, ctx) => {
+      const orders = await Order.findById({ id });
+
+      if (!orders) {
+        throw new Error("Order not found");
+      }
+
+      if (orders.vendor.toString() !== ctx.user.id) {
+        throw new Error("Not authorized customer to get order");
+      }
+
+      return orders;
     }
   },
   Mutation: {
