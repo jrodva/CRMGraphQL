@@ -3,6 +3,7 @@ require('dotenv').config({ path: '.env.local'});
 const User = require("../models/User");
 const Product = require("../models/Product");
 const Customer = require("../models/Customer");
+const Order = require("../models/Order");
 const bcryptjs = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 
@@ -198,6 +199,42 @@ const resolvers = {
       await Customer.findByIdAndDelete({_id: id});
 
       return "Deleted customer"
+    },
+    newOrder: async (_, { input }, ctx) => {
+      const { customer } = input;
+
+      let customerExists = await Customer.findById(customer);
+
+      if (!customerExists) {
+        throw new Error("Customer not found");
+      }
+
+      if (customerExists.vendor.toString() !== ctx.user.id) {
+        throw new Error("Not authorized to create this order");
+      }
+
+      for await (const article of input.order) {
+        const { id } = article;
+        const product = await Product.findById(id);
+
+        if (article.quantity > product.stock) {
+          throw new Error(`The product ${product.name} exceeds the available quantity`);
+        } else {
+          product.stock = product.stock - article.quantity;
+          await product.save();
+        }
+      }
+
+      const newOrder = new Order(input);
+      newOrder.vendor = ctx.user.id;
+
+      try {
+        const result = await newOrder.save();
+
+        return result;
+      } catch (error) {
+        console.log("Error creating new order : ", error);
+      }
     }
   }
 };
