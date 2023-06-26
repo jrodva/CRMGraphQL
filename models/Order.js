@@ -1,39 +1,31 @@
 const { mongoose } = require('mongoose');
 
 const OrdersSchema = mongoose.Schema({
-  name: {
-    type: String,
+  order: {
+    type: Array,
+    required: true
+  },
+  total: {
+    type: Number,
     required: true,
-    trim: true
   },
-  surname: {
-    type: String,
+  customer: {
+    type: mongoose.Schema.Types.ObjectId,
     required: true,
-    trim: true
-  },
-  company: {
-    type: String,
-    required: true,
-    trim: true
-  },
-  email: {
-    type: String,
-    required: true,
-    trim: true,
-    unique: true
-  },
-  phone: {
-    type: String,
-    trim: true,
-  },
-  createdAt: {
-    type: Date,
-    default: Date.now()
+    ref: 'Customer'
   },
   vendor: {
     type: mongoose.Schema.Types.ObjectId,
     required: true,
     ref: 'User'
+  },
+  state: {
+    type: String,
+    default: "PENDING"
+  },
+  createdAt: {
+    type: Date,
+    default: Date.now()
   }
 });
 
