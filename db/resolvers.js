@@ -275,7 +275,7 @@ const resolvers = {
         throw new Error("Order not found");
       }
 
-      if (orders.vendor.toString() !== ctx.user.id) {
+      if (customer.vendor.toString() !== ctx.user.id) {
         throw new Error("Not authorized customer to update order");
       }
 
